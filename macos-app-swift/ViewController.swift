@@ -8,9 +8,12 @@ import Cocoa
 import WebKit
 
 
-class ViewController: NSViewController, WKUIDelegate, WKNavigationDelegate {
+
+class v: NSViewController, WKUIDelegate, WKNavigationDelegate {
    
-      var webView: WKWebView!
+    var webView: WKWebView!
+   
+    var cook: String = "no";
     
     override func loadView() {
           super.loadView()
@@ -22,8 +25,6 @@ class ViewController: NSViewController, WKUIDelegate, WKNavigationDelegate {
           
             webView.uiDelegate = self
             view = webView
-          
-          
     }
     public func webView(_ webView: WKWebView, createWebViewWith configuration: WKWebViewConfiguration, for navigationAction: WKNavigationAction, windowFeatures: WKWindowFeatures) -> WKWebView? {
                 
@@ -33,28 +34,48 @@ class ViewController: NSViewController, WKUIDelegate, WKNavigationDelegate {
             return nil
     }
 
-    
+   
     
     override func viewDidLoad() {
-          super.viewDidLoad()
-
-          var myURL: URL!
-          myURL = URL(string: "https://crm.mcgroup.pl/")
-          let myRequest = URLRequest(url: myURL!)
-          webView.load(myRequest)
-          webView.allowsBackForwardNavigationGestures = true
-          
-    }
+        super.viewDidLoad()
+       
     
-    override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
-        if keyPath == "title" {
-            if let title = webView.title {
-                print(title)
-            }
+        var myURL: URL!
+        myURL = URL(string: "https://crm.mcgroup.pl/")
+        let myRequest = URLRequest(url: myURL!)
+        webView.load(myRequest)
+        webView.allowsBackForwardNavigationGestures = true;
+        webView.getCookies(for: ".mcgroup.pl") { data in
+            self.cook = String(describing: data["mia_consult_group_session"])
         }
+    
     }
     
     
+    
+        
     
 }
 
+
+extension WKWebView {
+
+    private var httpCookieStore: WKHTTPCookieStore  { return WKWebsiteDataStore.default().httpCookieStore }
+
+    func getCookies(for domain: String? = nil, completion: @escaping ([String : String])->())  {
+        var cookieDict = [String : String]()
+        httpCookieStore.getAllCookies { cookies in
+            for cookie in cookies {
+                if let domain = domain {
+                    if cookie.domain.contains(domain) {
+                        cookieDict[cookie.name] = cookie.value
+                    }
+                } else {
+                    cookieDict[cookie.name] = cookie.value
+                }
+            }
+            completion(cookieDict)
+        }
+      
+    }
+}
