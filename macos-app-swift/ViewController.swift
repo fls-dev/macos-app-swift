@@ -9,7 +9,9 @@ import WebKit
 
 
 
-class v: NSViewController, WKUIDelegate, WKNavigationDelegate {
+
+
+class ViewController: NSViewController, WKUIDelegate, WKNavigationDelegate {
    
     var webView: WKWebView!
    
@@ -26,8 +28,9 @@ class v: NSViewController, WKUIDelegate, WKNavigationDelegate {
             webView.uiDelegate = self
             view = webView
     }
+    
+    
     public func webView(_ webView: WKWebView, createWebViewWith configuration: WKWebViewConfiguration, for navigationAction: WKNavigationAction, windowFeatures: WKWindowFeatures) -> WKWebView? {
-                
             if navigationAction.targetFrame == nil {
                 self.webView.load(navigationAction.request)
             }
@@ -39,7 +42,6 @@ class v: NSViewController, WKUIDelegate, WKNavigationDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
        
-    
         var myURL: URL!
         myURL = URL(string: "https://crm.mcgroup.pl/")
         let myRequest = URLRequest(url: myURL!)
@@ -48,13 +50,16 @@ class v: NSViewController, WKUIDelegate, WKNavigationDelegate {
         webView.getCookies(for: ".mcgroup.pl") { data in
             self.cook = String(describing: data["mia_consult_group_session"])
         }
-    
     }
     
-    
-    
-        
-    
+    override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
+        if keyPath == "title" {
+            if let title = webView.title {
+                print(title)
+            }
+        }
+    }
+
 }
 
 
