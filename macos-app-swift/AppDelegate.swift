@@ -11,14 +11,7 @@ import Cocoa
 
 class AppDelegate: NSObject, NSApplicationDelegate {
 
-    
-    var statusBarItem: NSStatusItem = NSStatusBar.system.statusItem(withLength: NSStatusItem.variableLength)
 
-       func applicationDidFinishLaunching(_ aNotification: Notification) {
-           guard let statusButton = statusBarItem.button else { return }
-           statusButton.title = "Advanced Clock"
-       }
-//
 //    func applicationDidFinishLaunching(_ aNotification: Notification) {
 //        // Insert code here to initialize your application
 //    }

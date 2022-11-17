@@ -10,7 +10,6 @@ import WebKit
 
 
 
-
 class ViewController: NSViewController, WKUIDelegate, WKNavigationDelegate {
    
     var webView: WKWebView!
@@ -21,14 +20,43 @@ class ViewController: NSViewController, WKUIDelegate, WKNavigationDelegate {
           super.loadView()
           
           let webConfiguration = WKWebViewConfiguration()
-            webView = WKWebView(frame: CGRect(x: 0, y: 0, width: 1440, height: 790), configuration: webConfiguration)
-            webView.addObserver(self, forKeyPath: #keyPath(WKWebView.title), options: .new, context: nil)
+            webView = WKWebView(frame: CGRect(x: 0, y: 0, width: 1200, height: 800), configuration: webConfiguration)
             webView.navigationDelegate = self
-          
             webView.uiDelegate = self
             view = webView
     }
     
+  
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+  
+        webView.addObserver(self, forKeyPath: #keyPath(WKWebView.title), options: .new, context: nil)
+        
+        var myURL: URL!
+        myURL = URL(string: "https://crm.mcgroup.pl/")
+        let myRequest = URLRequest(url: myURL!)
+        webView.load(myRequest)
+        
+        webView.allowsBackForwardNavigationGestures = true;
+        webView.navigationDelegate = self
+        
+        webView.getCookies(for: ".mcgroup.pl") { data in
+            self.cook = String(describing: data["mia_consult_group_session"])
+        }
+    
+    }
+    
+    override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
+        if keyPath == "title" {
+            if let title = webView.title {
+                self.view.window?.title = title
+                self.view.window?.update()
+            }
+        }
+    }
+    
+   
     
     public func webView(_ webView: WKWebView, createWebViewWith configuration: WKWebViewConfiguration, for navigationAction: WKNavigationAction, windowFeatures: WKWindowFeatures) -> WKWebView? {
             if navigationAction.targetFrame == nil {
@@ -36,30 +64,7 @@ class ViewController: NSViewController, WKUIDelegate, WKNavigationDelegate {
             }
             return nil
     }
-
    
-    
-    override func viewDidLoad() {
-        super.viewDidLoad()
-       
-        var myURL: URL!
-        myURL = URL(string: "https://crm.mcgroup.pl/")
-        let myRequest = URLRequest(url: myURL!)
-        webView.load(myRequest)
-        webView.allowsBackForwardNavigationGestures = true;
-        webView.getCookies(for: ".mcgroup.pl") { data in
-            self.cook = String(describing: data["mia_consult_group_session"])
-        }
-    }
-    
-    override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
-        if keyPath == "title" {
-            if let title = webView.title {
-                print(title)
-            }
-        }
-    }
-
 }
 
 
@@ -81,6 +86,9 @@ extension WKWebView {
             }
             completion(cookieDict)
         }
-      
     }
+    
+    
+    
+    
 }

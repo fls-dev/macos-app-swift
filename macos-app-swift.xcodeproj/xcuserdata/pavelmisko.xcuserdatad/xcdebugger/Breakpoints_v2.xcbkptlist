@@ -14,8 +14,8 @@
             filePath = "macos-app-swift/ViewController.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "69"
-            endingLineNumber = "69"
+            startingLineNumber = "74"
+            endingLineNumber = "74"
             landmarkName = "WKWebView"
             landmarkType = "21">
          </BreakpointContent>
