@@ -54,6 +54,9 @@ class ViewController: NSViewController, WKUIDelegate, WKNavigationDelegate {
                 self.view.window?.update()
             }
         }
+        if let url = webView.url {
+            print(url)
+        }
     }
     
    
