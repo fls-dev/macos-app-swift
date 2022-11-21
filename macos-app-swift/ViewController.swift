@@ -5,7 +5,6 @@
 //  Created by Pavel Misko on 16.11.22.
 import WebKit
 import Cocoa
-import WebKit
 
 
 
@@ -34,15 +33,15 @@ class ViewController: NSViewController, WKUIDelegate, WKNavigationDelegate {
         webView.addObserver(self, forKeyPath: #keyPath(WKWebView.title), options: .new, context: nil)
         
         var myURL: URL!
-        myURL = URL(string: "https://crm.mcgroup.pl/")
+        myURL = URL(string: "https://google.com/")
         let myRequest = URLRequest(url: myURL!)
         webView.load(myRequest)
         
         webView.allowsBackForwardNavigationGestures = true;
         webView.navigationDelegate = self
         
-        webView.getCookies(for: ".mcgroup.pl") { data in
-            self.cook = String(describing: data["mia_consult_group_session"])
+        webView.getCookies(for: "coockieName") { data in
+            self.cook = String(describing: data["keyName"])
         }
     
     }
